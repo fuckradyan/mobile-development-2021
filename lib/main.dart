@@ -61,8 +61,8 @@ class _MyFirstAppState extends State<MyFirstApp> {
             body: TabBarView(
               children: <Widget>[
                 LabFirst(),
-                Center(child: Text('Петух')),
-                Center(child: Text('Петух')),
+                Center(child: Text('example')),
+                Center(child: Text('example')),
               ],
             ),
           )),
