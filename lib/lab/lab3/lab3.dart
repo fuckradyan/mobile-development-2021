@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'parse_currency.dart';
-import 'parser.dart';
+// import 'parser.dart';
 
 class LabThird extends StatefulWidget {
   @override
@@ -20,8 +20,9 @@ class LabThird1 extends State<LabThird> {
   void initState() {
     super.initState();
     _loading = true;
-    Parser.getUsers().then((currency) {
+    getUsers().then((currency) {
       _currency = currency;
+      print(_currency.valute['USD']);
       _loading = false;
     });
   }
@@ -36,11 +37,11 @@ class LabThird1 extends State<LabThird> {
         itemBuilder: (context, index) {
           Currency currency = _currency;
           return ListTile(
-            title: Text(currency.valute[index].name),
-            subtitle: Text(
+              title: Text(currency.valute['USD'].name),
+              subtitle: Text(
                 // currency.valute[index].value.toString()
-                currency.valute[index].name),
-          );
+                'currency.valute[index].name',
+              ));
         },
       )
           // child: FutureBuilder(
@@ -58,6 +59,22 @@ class LabThird1 extends State<LabThird> {
           // ),
           ),
     );
+  }
+
+  static Future<Currency> getUsers() async {
+    var url = Uri.https('cbr-xml-daily.ru', '/daily_json.js');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final Currency currency = currencyFromJson(response.body);
+        return currency;
+      } else {
+        return Currency();
+      }
+    } catch (e) {
+      print(e);
+      return Currency();
+    }
   }
 }
 
