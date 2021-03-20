@@ -4,6 +4,7 @@ import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 
 class PreviewScreen extends StatefulWidget {
   final String imgPath;
@@ -47,14 +48,15 @@ class _PreviewScreenState extends State<PreviewScreen> {
                               Icons.file_download,
                               color: Colors.white,
                             ),
-                            onPressed: () {
+                            onPressed: () async {
                               getBytes().then((bytes) {
                                 print('here now');
                                 print(widget.imgPath);
-
-                                // ImageGallerySaver.saveImage(
-                                //     bytes.buffer.asUint8List());
                               });
+                              final params = SaveFileDialogParams(
+                                  sourceFilePath: widget.imgPath);
+                              final filePath = await FlutterFileDialog.saveFile(
+                                  params: params);
                             },
                           ),
                           IconButton(

@@ -1,21 +1,12 @@
+// Для выполнения лабораторной работы использовался открытый парсер app.quicktype.io
+// Парсился данный файл https://www.cbr-xml-daily.ru/daily_json.js
 import 'dart:async';
 // import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:html/parser.dart';
-
-Future makeResponse() async {
-  final response =
-      await http.Client().get(Uri.parse('https://github.com/JonathanMonga'));
-  if (response.statusCode == 200) {
-    var document = parse(response.body);
-    var elements = document.getElementsByTagName('p')[0];
-    return elements;
-  } else {
-    throw Exception();
-  }
-}
+import 'parse_currency.dart';
+import 'parser.dart';
 
 class LabThird extends StatefulWidget {
   @override
@@ -23,58 +14,52 @@ class LabThird extends StatefulWidget {
 }
 
 class LabThird1 extends State<LabThird> {
-  Future futureAlbum;
-
+  Currency _currency;
+  bool _loading;
   @override
   void initState() {
     super.initState();
-    futureAlbum = makeResponse();
+    _loading = true;
+    Parser.getUsers().then((currency) {
+      _currency = currency;
+      _loading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Fetch Data Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_loading ? 'грузит' : 'загрузило'),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('Fetch Data Example'),
-        ),
-        body: Center(
-          child: FutureBuilder(
-            future: futureAlbum,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return Text(snapshot.data.title);
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
+      body: Container(child: ListView.builder(
+        itemBuilder: (context, index) {
+          Currency currency = _currency;
+          return ListTile(
+            title: Text(currency.valute[index].name),
+            subtitle: Text(
+                // currency.valute[index].value.toString()
+                currency.valute[index].name),
+          );
+        },
+      )
+          // child: FutureBuilder(
+          //   future: futureAlbum,
+          //   builder: (context, snapshot) {
+          //     if (snapshot.connectionState == ConnectionState.done) {
+          //       return Text(snapshot.data.title);
+          //     } else if (snapshot.hasError) {
+          //       return Text("${snapshot.error}");
+          //     }
 
-              // By default, show a loading spinner.
-              return CircularProgressIndicator();
-            },
+          //     // By default, show a loading spinner.
+          //     return CircularProgressIndicator();
+          //   },
+          // ),
           ),
-        ),
-      ),
     );
   }
 }
-// Future<Album> fetchAlbum() async {
-//   final response =
-//       await http.get(Uri.https('finance.rambler.ru', '/currencies/'));
-
-//   if (response.statusCode == 200) {
-//     // If the server did return a 200 OK response,
-//     // then parse the JSON.
-//     return Album.fromJson(jsonDecode(response.body));
-//   } else {
-//     // If the server did not return a 200 OK response,
-//     // then throw an exception.
-//     throw Exception('Failed to load album');
-//   }
-// }
 
 // class Album {
 //   final int userId;
