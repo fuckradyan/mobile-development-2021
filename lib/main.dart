@@ -9,21 +9,13 @@ void main() => runApp(MyFirstApp());
 class MyFirstApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    // TODO: implement createState
     return _MyFirstAppState();
   }
 }
 
 class _MyFirstAppState extends State<MyFirstApp> {
-  // bool _loading;
-  // double _progressValue;
   @override
-  void initState() {
-    // _loading = false;
-    // _progressValue = 0.0;
-
-    super.initState();
-  }
+  void initState() => super.initState();
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +26,6 @@ class _MyFirstAppState extends State<MyFirstApp> {
         primaryColor: Colors.orangeAccent,
         accentColor: Colors.orangeAccent,
         fontFamily: 'Montserrat',
-        textTheme: TextTheme(
-            // headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
-            // headline2: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
-            // bodyText1: TextStyle(fontSize: 14.0, fontFamily: 'Montserrat'),
-            ),
       ),
       home: DefaultTabController(
           length: 4,

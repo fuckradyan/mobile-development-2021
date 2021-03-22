@@ -2,7 +2,6 @@
 // Парсился данный файл https://www.cbr-xml-daily.ru/daily_json.js
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'parse_currency.dart';
 
@@ -33,7 +32,6 @@ Future<Currency> getJson() async {
 
   http.Response response = await http.get(apiUrl);
   print(response.body);
-  print(currencyFromJson(response.body).valute['USD'].name);
   return currencyFromJson(response.body);
 }
 

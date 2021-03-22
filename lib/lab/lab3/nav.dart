@@ -1,6 +1,7 @@
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'json_parse.dart';
+import 'webview.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,7 +25,7 @@ class Lab3Nav1 extends State {
 
   List NavyItems = [
     LabThird(),
-    Container(child: Text('text2')),
+    WebViewExample(),
     Container(child: Text('text3')),
   ];
   @override
@@ -39,7 +40,7 @@ class Lab3Nav1 extends State {
         onItemSelected: (index) => setState(() => _currentIndex = index),
         items: <BottomNavyBarItem>[
           BottomNavyBarItem(
-            icon: Icon(Icons.code),
+            icon: Icon(Icons.code_rounded),
             title: Text('JSON'),
             activeColor: Colors.red,
             textAlign: TextAlign.center,
