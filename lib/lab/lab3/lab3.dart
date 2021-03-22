@@ -1,138 +1,117 @@
 // Для выполнения лабораторной работы использовался открытый парсер app.quicktype.io
 // Парсился данный файл https://www.cbr-xml-daily.ru/daily_json.js
-import 'dart:async';
-// import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'parse_currency.dart';
-// import 'parser.dart';
+import '../lab3_old/parse_currency.dart';
+
+void main() async {
+  Currency _data = await getJson();
+  print(_data);
+}
+
+void _showDialogBox(BuildContext context, String message, String t) {
+  var alert = new AlertDialog(
+    title: new Text(t),
+    content: new Text(message),
+    actions: <Widget>[
+      new FlatButton(
+        child: new Text("OK"),
+        onPressed: () {
+          Navigator.pop(context);
+        },
+      )
+    ],
+  );
+
+  showDialog(context: context, builder: (context) => alert);
+}
+
+Future<Currency> getJson() async {
+  Uri apiUrl = Uri.parse('https://www.cbr-xml-daily.ru/daily_json.js');
+
+  http.Response response = await http.get(apiUrl);
+  print(response.body);
+  print(currencyFromJson(response.body).valute['USD'].name);
+  return currencyFromJson(response.body);
+}
 
 class LabThird extends StatefulWidget {
+  Uri url;
+  LabThird({Uri url}) : url = url;
   @override
   LabThird1 createState() => LabThird1();
 }
 
 class LabThird1 extends State<LabThird> {
-  Currency _currency;
-  bool _loading;
+  Currency _data;
+  bool _loading = true;
+
   @override
   void initState() {
-    super.initState();
-    _loading = true;
-    getUsers().then((currency) {
-      _currency = currency;
-      print(_currency.valute['USD']);
-      _loading = false;
+    getJson().then((value) {
+      setState(() {
+        _data = value;
+        _loading = false;
+      });
     });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_loading ? 'грузит' : 'загрузило'),
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text('JSON Parse'),
+        centerTitle: true,
       ),
-      body: Container(child: ListView.builder(
-        itemBuilder: (context, index) {
-          Currency currency = _currency;
-          return ListTile(
-              title: Text(currency.valute['USD'].name),
-              subtitle: Text(
-                // currency.valute[index].value.toString()
-                'currency.valute[index].name',
-              ));
-        },
-      )
-          // child: FutureBuilder(
-          //   future: futureAlbum,
-          //   builder: (context, snapshot) {
-          //     if (snapshot.connectionState == ConnectionState.done) {
-          //       return Text(snapshot.data.title);
-          //     } else if (snapshot.hasError) {
-          //       return Text("${snapshot.error}");
-          //     }
+      // body: Center(),
+      body: _loading
+          ? Center(child: CircularProgressIndicator())
+          : ListView.builder(
+              itemCount: 15,
+              itemBuilder: (BuildContext context, int position) {
+                String key = _data.valute.keys.elementAt(position);
+                if (position.isOdd) return new Divider();
 
-          //     // By default, show a loading spinner.
-          //     return CircularProgressIndicator();
-          //   },
-          // ),
-          ),
+                //TITLE DATA
+                return ListTile(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 7.0),
+                  title: Text(
+                    "${_data.valute[key].name}",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                    ),
+                  ),
+
+                  //CIRCLE AVATAR LETTER
+                  leading: new CircleAvatar(
+                    backgroundColor: Colors.blueAccent,
+                    maxRadius: 30.0,
+                    child: Text(
+                      "${_data.valute[key].name.substring(0, 3)}",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                  ),
+
+                  onTap: () {
+                    _showDialogBox(context, "${_data.valute[key].name}",
+                        "${_data.valute[key].value}");
+                  },
+
+                  //BODY DATA
+                  subtitle: Text(
+                    "${_data.valute[key].value}",
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                );
+              },
+            ),
     );
   }
-
-  static Future<Currency> getUsers() async {
-    var url = Uri.https('cbr-xml-daily.ru', '/daily_json.js');
-    try {
-      final response = await http.get(url);
-      if (response.statusCode == 200) {
-        final Currency currency = currencyFromJson(response.body);
-        return currency;
-      } else {
-        return Currency();
-      }
-    } catch (e) {
-      print(e);
-      return Currency();
-    }
-  }
 }
-
-// class Album {
-//   final int userId;
-//   final int id;
-//   final String title;
-
-//   Album({@required this.userId, @required this.id, @required this.title});
-
-//   factory Album.fromJson(Map<String, dynamic> json) {
-//     return Album(
-//       userId: json['userId'],
-//       id: json['id'],
-//       title: json['title'],
-//     );
-//   }
-// }
-
-// void main() => runApp(LabThird());
-
-// class LabThird extends StatefulWidget {
-//   LabThird({Key key}) : super(key: key);
-
-//   @override
-//   LabThird1 createState() => LabThird1();
-// }
-
-// class LabThird1 extends State<LabThird> {
-//   Future<Album> futureAlbum;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     futureAlbum = fetchAlbum();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Fetch Data Example'),
-//       ),
-//       body: Center(
-//         child: FutureBuilder<Album>(
-//           future: futureAlbum,
-//           builder: (context, snapshot) {
-//             if (snapshot.hasData) {
-//               return Text(snapshot.data.title);
-//             } else if (snapshot.hasError) {
-//               return Text("${snapshot.error}");
-//             }
-
-//             // By default, show a loading spinner.
-//             return CircularProgressIndicator();
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }

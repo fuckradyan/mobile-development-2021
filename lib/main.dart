@@ -20,6 +20,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
   void initState() {
     // _loading = false;
     // _progressValue = 0.0;
+
     super.initState();
   }
 
@@ -29,8 +30,8 @@ class _MyFirstAppState extends State<MyFirstApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.light,
-        primaryColor: Colors.cyan[600],
-        accentColor: Colors.cyan[600],
+        primaryColor: Colors.orangeAccent,
+        accentColor: Colors.orangeAccent,
         fontFamily: 'Montserrat',
         textTheme: TextTheme(
             // headline1: TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),
