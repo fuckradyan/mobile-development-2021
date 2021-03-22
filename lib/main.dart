@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'lab/lab1/lab1.dart';
 import 'lab/lab2/lab2.dart';
-import 'lab/lab3/lab3.dart';
+import 'lab/lab3/nav.dart';
+import 'lab/test/test.dart';
 
 void main() => runApp(MyFirstApp());
 
@@ -40,7 +41,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
             ),
       ),
       home: DefaultTabController(
-          length: 3,
+          length: 4,
           child: Scaffold(
             appBar: AppBar(
               title: Center(
@@ -62,6 +63,10 @@ class _MyFirstAppState extends State<MyFirstApp> {
                     icon: Icon(Icons.connected_tv),
                     text: "Lab 3",
                   ),
+                  Tab(
+                    icon: Icon(Icons.radio),
+                    text: "test",
+                  ),
                 ],
               ),
             ),
@@ -69,7 +74,8 @@ class _MyFirstAppState extends State<MyFirstApp> {
               children: <Widget>[
                 LabFirst(),
                 LabSecond(),
-                LabThird(),
+                Lab3Nav(),
+                Testtest(),
               ],
             ),
           )),

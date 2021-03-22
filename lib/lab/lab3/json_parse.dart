@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../lab3_old/parse_currency.dart';
+import 'parse_currency.dart';
 
 void main() async {
   Currency _data = await getJson();
@@ -61,15 +61,16 @@ class LabThird1 extends State<LabThird> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('JSON Parse'),
-        centerTitle: true,
-      ),
-      // body: Center(),
-      body: _loading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.builder(
+    return _loading
+        ? Center(child: CircularProgressIndicator())
+        : new Scaffold(
+            appBar: new AppBar(
+              title: new Text(
+                  'Курсы валют за ${_data.date.toString().substring(0, 10)}'),
+              centerTitle: true,
+            ),
+            // body: Center(),
+            body: ListView.builder(
               itemCount: 15,
               itemBuilder: (BuildContext context, int position) {
                 String key = _data.valute.keys.elementAt(position);
@@ -112,6 +113,6 @@ class LabThird1 extends State<LabThird> {
                 );
               },
             ),
-    );
+          );
   }
 }
