@@ -2,6 +2,7 @@ import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'json_parse.dart';
 import 'webview.dart';
+import 'html_parse.dart';
 
 void main() => runApp(MyApp());
 
@@ -26,7 +27,7 @@ class Lab3Nav1 extends State {
   List NavyItems = [
     LabThird(),
     WebViewExample(),
-    Container(child: Text('text3')),
+    MyForm(),
   ];
   @override
   Widget build(BuildContext context) {

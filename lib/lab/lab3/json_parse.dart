@@ -32,7 +32,9 @@ Future<Currency> getJson() async {
 
   http.Response response = await http.get(apiUrl);
   print(response.body);
-  return currencyFromJson(response.body);
+  if (response.statusCode == 200) {
+    return currencyFromJson(response.body);
+  }
 }
 
 class LabThird extends StatefulWidget {
