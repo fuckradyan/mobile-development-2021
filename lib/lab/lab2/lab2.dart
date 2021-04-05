@@ -54,7 +54,7 @@ class MyHomePage extends State {
                                   appBar: AppBar(
                                     title: Text("Просмотр видео"),
                                   ),
-                                  body: Column(
+                                  body: ListView(
                                     children: [
                                       ChewieListItem(
                                         videoPlayerController:

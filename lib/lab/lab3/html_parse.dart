@@ -56,6 +56,7 @@ class MyFormState extends State {
                               onPressed: () async {
                                 catchHTML(myController.text).then((value) {
                                   setState(() {
+                                    isRaw = true;
                                     _body = value;
                                   });
                                 });

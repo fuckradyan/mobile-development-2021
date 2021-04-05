@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'lab/lab1/lab1.dart';
 import 'lab/lab2/lab2.dart';
 import 'lab/lab3/nav.dart';
-import 'lab/test/test.dart';
+import 'lab/lab4/lab4.dart';
 
 void main() => runApp(MyFirstApp());
 
@@ -51,7 +52,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
                     text: "Lab 3",
                   ),
                   Tab(
-                    icon: Icon(Icons.radio),
+                    icon: FaIcon(FontAwesomeIcons.google),
                     text: "test",
                   ),
                 ],
@@ -62,7 +63,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
                 LabFirst(),
                 LabSecond(),
                 Lab3Nav(),
-                Testtest(),
+                LabFourth()
               ],
             ),
           )),
