@@ -5,7 +5,10 @@ import 'lab/lab2/lab2.dart';
 import 'lab/lab3/nav.dart';
 import 'lab/lab4/lab4.dart';
 
-void main() => runApp(MyFirstApp());
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyFirstApp());
+}
 
 class MyFirstApp extends StatefulWidget {
   @override
