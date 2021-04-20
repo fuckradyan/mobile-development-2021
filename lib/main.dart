@@ -32,13 +32,14 @@ class _MyFirstAppState extends State<MyFirstApp> {
         fontFamily: 'Montserrat',
       ),
       home: DefaultTabController(
-          length: 4,
+          length: 5,
           child: Scaffold(
             appBar: AppBar(
               title: Center(
                 child: Text('Mobile Development'),
               ),
               bottom: TabBar(
+                isScrollable: true,
                 tabs: <Widget>[
                   Tab(
                     icon: Icon(
@@ -55,9 +56,13 @@ class _MyFirstAppState extends State<MyFirstApp> {
                     text: "Lab 3",
                   ),
                   Tab(
-                    icon: FaIcon(FontAwesomeIcons.google),
-                    text: "test",
+                    icon: FaIcon(FontAwesomeIcons.vk),
+                    text: "Lab 4-5",
                   ),
+                  Tab(
+                    icon: FaIcon(FontAwesomeIcons.airbnb),
+                    text: "Lab 6",
+                  )
                 ],
               ),
             ),
@@ -66,8 +71,30 @@ class _MyFirstAppState extends State<MyFirstApp> {
                 LabFirst(),
                 LabSecond(),
                 Lab3Nav(),
-                LabFourth()
+                LabFourth(),
+                Center(
+                  child: Text("hello there"),
+                )
               ],
+            ),
+            drawer: Drawer(
+              child: new ListView(
+                children: <Widget>[
+                  new DrawerHeader(
+                    margin: EdgeInsets.zero,
+                    padding: EdgeInsets.zero,
+                    child: UserAccountsDrawerHeader(
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                      ),
+                      accountName: Text('asd'),
+                      accountEmail: Text("home@dartflutter.ru"),
+                    ),
+                  ),
+                  new ListTile(title: new Text("О себе"), onTap: () {}),
+                  new ListTile(title: new Text("Настройки"), onTap: () {})
+                ],
+              ),
             ),
           )),
     );

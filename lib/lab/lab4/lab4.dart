@@ -1,6 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_login_vk/flutter_login_vk.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path/path.dart';
+import 'package:vkio/main.dart';
+import 'package:vkio/vk.dart';
+
+VK vk;
+Future getUsers() async {
+  var response = await vk.api.friends.get({});
+  print(response);
+  print('echo');
+
+  var friend = await vk.api.users.get({
+    'user_ids': response['items'],
+    'fields': ['photo_50', 'online']
+  });
+
+  return friend;
+}
 
 void main() {
   runApp(LabFourth());
@@ -21,11 +39,12 @@ class _LabFourthState extends State<LabFourth> {
   VKUserProfile _profile;
   String _email;
   bool _sdkInitialized = false;
+  bool _showFriends;
 
   @override
   void initState() {
     super.initState();
-
+    _showFriends = true;
     _getSdkVersion();
     _initSdk();
   }
@@ -35,34 +54,118 @@ class _LabFourthState extends State<LabFourth> {
     final token = _token;
     final profile = _profile;
     final isLogin = token != null;
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Login via VK example'),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 8.0),
-          child: Builder(
-            builder: (context) => Center(
-              child: Column(
-                children: <Widget>[
-                  if (_sdkVersion != null) Text('SDK v$_sdkVersion'),
-                  if (token != null && profile != null)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: _buildUserInfo(context, profile, token, _email),
-                    ),
-                  isLogin
-                      ? OutlinedButton(
-                          child: const Text('Log Out'),
-                          onPressed: _onPressedLogOutButton,
-                        )
-                      : OutlinedButton(
-                          child: const Text('Log In'),
-                          onPressed: () => _onPressedLogInButton(context),
-                        ),
-                ],
-              ),
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 8.0),
+        child: Builder(
+          builder: (context) => Center(
+            child: Column(
+              children: <Widget>[
+                // if (_sdkVersion != null) Text('SDK v$_sdkVersion'),
+                if (token != null && profile != null)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: _buildUserInfo(context, profile, token, _email),
+                  ),
+                isLogin
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          OutlinedButton(
+                              child: const Text('Друзья'),
+                              onPressed: () async {
+                                setState(() {
+                                  getUsers().then((value) {
+                                    var friend = value;
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Scaffold(
+                                                  appBar: AppBar(
+                                                    title: Text(
+                                                        "Друзья ${profile.firstName} ${profile.lastName}"),
+                                                  ),
+                                                  body: ListView.builder(
+                                                    itemCount: friend.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int position) {
+                                                      if (position.isOdd)
+                                                        return new Divider();
+
+                                                      //TITLE DATA
+                                                      return ListTile(
+                                                        contentPadding:
+                                                            EdgeInsets
+                                                                .symmetric(
+                                                                    vertical:
+                                                                        10.0,
+                                                                    horizontal:
+                                                                        7.0),
+                                                        title: Text(
+                                                          "${friend[position]['first_name']} ${friend[position]['last_name']}",
+                                                          style: TextStyle(
+                                                            fontSize: 16.0,
+                                                          ),
+                                                        ),
+
+                                                        //CIRCLE AVATAR LETTER
+                                                        leading:
+                                                            new CircleAvatar(
+                                                          backgroundImage:
+                                                              NetworkImage(friend[
+                                                                      position]
+                                                                  ['photo_50']),
+                                                          maxRadius: 30.0,
+                                                        ),
+
+                                                        //BODY DATA
+                                                        subtitle: Text(
+                                                          friend[position][
+                                                                      'online'] ==
+                                                                  1
+                                                              ? "online"
+                                                              : 'offline',
+                                                          style: TextStyle(
+                                                              color: friend[position]
+                                                                          [
+                                                                          'online'] ==
+                                                                      1
+                                                                  ? Colors
+                                                                      .green[400]
+                                                                  : Colors.grey,
+                                                              fontSize: 18.0),
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
+                                                )));
+                                  });
+                                });
+                              }),
+                          OutlinedButton(
+                            child: const Text('Выйти'),
+                            style: TextButton.styleFrom(primary: Colors.red),
+                            onPressed: _onPressedLogOutButton,
+                          ),
+                        ],
+                      )
+                    : OutlineButton.icon(
+                        label: const Text('Log in with VK',
+                            style: TextStyle(
+                              color: Colors.black,
+                            )),
+                        shape: StadiumBorder(),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+                        highlightedBorderColor: Colors.black,
+                        borderSide: BorderSide(color: Colors.black),
+                        textColor: Colors.black,
+                        icon: FaIcon(FontAwesomeIcons.vk,
+                            color: Colors.blue[900]),
+                        onPressed: () => _onPressedLogInButton(context),
+                      ),
+              ],
             ),
           ),
         ),
@@ -72,34 +175,85 @@ class _LabFourthState extends State<LabFourth> {
 
   Widget _buildUserInfo(BuildContext context, VKUserProfile profile,
       VKAccessToken accessToken, String email) {
-    final photoUrl = profile.photo200;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text('User: '),
-        Text(
-          '${profile.firstName} ${profile.lastName}',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Text(
-          'Online: ${profile.online}, Online mobile: ${profile.onlineMobile}',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        if (photoUrl != null) Image.network(photoUrl),
-        const Text('AccessToken: '),
-        Text(
-          accessToken.token,
-          softWrap: true,
-        ),
-        Text('Created: ${accessToken.created}'),
-        Text('Expires in: ${accessToken.expiresIn}'),
-        if (email != null) Text('Email: $email'),
-      ],
+    final photoUrl = profile.photo100;
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text(
+            'Вы зашли как: ',
+            style: TextStyle(fontSize: 20),
+          ),
+          Text(
+            '${profile.firstName} ${profile.lastName}',
+            style: const TextStyle(
+                fontSize: 18, fontFamily: 'Arial', fontWeight: FontWeight.bold),
+          ),
+          if (photoUrl != null)
+            Container(
+              margin: EdgeInsets.only(top: 10),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(100),
+                child: Image.network(
+                  photoUrl,
+                ),
+              ),
+            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(Icons.laptop),
+              Container(
+                width: 10,
+                height: 10,
+                child: RawMaterialButton(
+                  onPressed: () {},
+                  elevation: 2.0,
+                  fillColor: profile.online ? Colors.green : Colors.red,
+                  padding: EdgeInsets.all(1.0),
+                  shape: CircleBorder(),
+                  focusColor: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Icon(Icons.phone_android_outlined),
+              Container(
+                height: 10,
+                width: 10,
+                child: RawMaterialButton(
+                  onPressed: () {},
+                  elevation: 2.0,
+                  fillColor: profile.onlineMobile ? Colors.green : Colors.red,
+                  padding: EdgeInsets.all(1.0),
+                  shape: CircleBorder(),
+                ),
+              ),
+            ],
+          ),
+          const Text(
+            'AccessToken: ',
+            style: TextStyle(fontSize: 20),
+          ),
+          Text(
+            accessToken.token,
+            softWrap: true,
+            style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+          ),
+          Text('Создан: ${accessToken.created}'),
+          Text('Истекает: ${accessToken.expiresIn}'),
+          if (email != null) Text('Email: $email'),
+        ],
+      ),
     );
   }
 
   Future<void> _onPressedLogInButton(BuildContext context) async {
     final res = await widget.plugin.logIn(scope: [
+      VKScope.friends,
       VKScope.email,
     ]);
 
@@ -145,6 +299,10 @@ class _LabFourthState extends State<LabFourth> {
       _token = token;
       _profile = profileRes?.asValue?.value;
       _email = email;
+      vk = VK(
+        token: token.token.toString(),
+        language: LanguageType.EN,
+      );
     });
   }
 }
