@@ -54,6 +54,7 @@ class _LabFourthState extends State<LabFourth> {
     final token = _token;
     final profile = _profile;
     final isLogin = token != null;
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 8.0),
@@ -234,18 +235,18 @@ class _LabFourthState extends State<LabFourth> {
               ),
             ],
           ),
-          const Text(
-            'AccessToken: ',
-            style: TextStyle(fontSize: 20),
-          ),
-          Text(
-            accessToken.token,
-            softWrap: true,
-            style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
-          ),
-          Text('Создан: ${accessToken.created}'),
-          Text('Истекает: ${accessToken.expiresIn}'),
-          if (email != null) Text('Email: $email'),
+          // const Text(
+          //   'AccessToken: ',
+          //   style: TextStyle(fontSize: 20),
+          // ),
+          // Text(
+          //   accessToken.token,
+          //   softWrap: true,
+          //   style: TextStyle(fontSize: 20, fontStyle: FontStyle.italic),
+          // ),
+          // Text('Создан: ${accessToken.created}'),
+          // Text('Истекает: ${accessToken.expiresIn}'),
+          // if (email != null) Text('Email: $email'),
         ],
       ),
     );

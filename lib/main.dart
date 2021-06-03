@@ -4,6 +4,9 @@ import 'lab/lab1/lab1.dart';
 import 'lab/lab2/lab2.dart';
 import 'lab/lab3/nav.dart';
 import 'lab/lab4/lab4.dart';
+import 'lab/lab6/lab6.dart';
+import 'lab/lab7/lab7.dart';
+import 'lab/lab7/lab777.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +23,6 @@ class MyFirstApp extends StatefulWidget {
 class _MyFirstAppState extends State<MyFirstApp> {
   @override
   void initState() => super.initState();
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,7 +34,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
         fontFamily: 'Montserrat',
       ),
       home: DefaultTabController(
-          length: 5,
+          length: 6,
           child: Scaffold(
             appBar: AppBar(
               title: Center(
@@ -60,8 +62,12 @@ class _MyFirstAppState extends State<MyFirstApp> {
                     text: "Lab 4-5",
                   ),
                   Tab(
-                    icon: FaIcon(FontAwesomeIcons.airbnb),
+                    icon: FaIcon(FontAwesomeIcons.lock),
                     text: "Lab 6",
+                  ),
+                  Tab(
+                    icon: Icon(Icons.message),
+                    text: "Lab 7",
                   )
                 ],
               ),
@@ -72,9 +78,8 @@ class _MyFirstAppState extends State<MyFirstApp> {
                 LabSecond(),
                 Lab3Nav(),
                 LabFourth(),
-                Center(
-                  child: Text("hello there"),
-                )
+                LabSixth(),
+                LabSeventh()
               ],
             ),
             drawer: Drawer(
