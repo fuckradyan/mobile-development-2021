@@ -1,138 +1,156 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
 import 'dart:convert';
-import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
-class Lab08 extends StatefulWidget {
+class LabEigth extends StatefulWidget {
+  const LabEigth({Key key}) : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => _Lab08State();
+  _LabEigthState createState() => _LabEigthState();
 }
 
-class _Lab08State extends State<Lab08> {
-  final HttpClient client = new HttpClient();
-
+class _LabEigthState extends State<LabEigth> {
   String token = '';
-  String responseText = '';
-
-  Uint8List responseImage;
-
-  Map jsonMap = {'username': 'user1', 'password': 'abcxyz'};
-
-  _Lab08State() {
-    client.badCertificateCallback =
-        ((X509Certificate cert, String host, int port) => true);
-  }
-
-  void getJwt() {
-    client
-        .postUrl(Uri.parse('https://jwt-flutterproj.herokuapp.com/login'))
-        .then((HttpClientRequest request) {
-      print('DEBUUUUUUUUUUUUUUUUG');
-      print(json.encode(jsonMap));
-      print(request);
-      request.headers.set('content-type', 'application/json');
-      request.add(utf8.encode(json.encode(jsonMap)));
-      print(request);
-      return request.close();
-    }).then((HttpClientResponse response) {
-      response.listen((event) {
-        String responseString = String.fromCharCodes(event);
-        setState(() {
-          token = json.decode(responseString)['access_token'];
-          print(token);
-        });
-      });
-    });
-  }
-
-  void getResp() {
-    client
-        .getUrl(Uri.parse('https://flutter-jwt-senich.herokuapp.com/protected'))
-        .then((HttpClientRequest request) {
-      request.headers.set('Authorization', 'JWT $token');
-      return request.close();
-    }).then((HttpClientResponse response) {
-      if (response.statusCode != 200) {
-        response.listen((event) {
-          String responseString = String.fromCharCodes(event);
-          setState(() {
-            responseText = responseString;
-          });
-        });
-      } else {
-        String gotResponse = '';
-        response.forEach((element) {
-          gotResponse += String.fromCharCodes(element);
-        }).then((value) {
-          var jsonDecoded = json.decode(gotResponse);
-          String message = jsonDecoded['message'];
-          String time = DateFormat.yMd()
-              .add_jm()
-              .format(DateTime.fromMicrosecondsSinceEpoch(
-                  jsonDecoded['timestamp'].toInt() * 1000000))
-              .toString();
-          setState(() {
-            responseText =
-                'Сообщение от сервера: $message\nВремя: $time\nФото: ';
-            responseImage = base64.decode(jsonDecoded['image']);
-          });
-        });
-      }
-    });
-  }
-
+  String message = '';
+  String errcode = '';
+  String time = '';
+  String public = '';
+  Uint8List image;
+  Map jsonMap = {'username': 'fuckradyan', 'password': 'poop123'};
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: Column(
-      children: [
-        Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(top: 15),
-            child: Text(
-              'JWT-токен: ',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            )),
-        Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.all(15),
-            child: Text(token, textAlign: TextAlign.left)),
-        ElevatedButton(onPressed: getJwt, child: Text('Аутентифицироваться')),
-        ElevatedButton(
-            onPressed: getResp, child: Text('Получить приватную информацию')),
-        Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.only(top: 15),
-            child: Text(
-              'Ответ сервера: ',
-              textAlign: TextAlign.left,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-            )),
-        Container(
-            alignment: Alignment.center,
-            padding: EdgeInsets.all(12),
-            margin: EdgeInsets.all(12),
-            child: Column(
-              children: [
-                Text(responseText,
-                    textAlign: TextAlign.center,
+      child: Container(
+        alignment: Alignment.center,
+        margin: EdgeInsets.all(15),
+        child: Center(
+          child: Column(
+            children: [
+              OutlineButton(
+                onPressed: () async {
+                  apiRequest('https://jwt-flutterproj.herokuapp.com/login',
+                          jsonMap)
+                      .then((response) {
+                    setState(() {
+                      token = json.decode(response)['token'];
+                    });
+                    print(token);
+                  });
+                },
+                child:
+                    Text('Аутентифицироваться', style: TextStyle(fontSize: 17)),
+              ),
+              Text('JWT-токен: ', style: TextStyle(fontSize: 20)),
+              Padding(padding: EdgeInsets.all(5)),
+              Text(token == '' ? 'Тут пусто :(' : token),
+              Padding(padding: EdgeInsets.all(10)),
+              OutlineButton(
+                onPressed: () async {
+                  getPublic().then((response) {
+                    if (response != null) {
+                      setState(() {
+                        public =
+                            'Сообщение: ' + json.decode(response)['message'];
+                        errcode = '';
+                      });
+                    }
+                  });
+                },
+                child: Text('Получить публичную информацию',
                     style: TextStyle(fontSize: 15)),
-                Column(children: [
-                  if (responseImage == null)
-                    Text('Ответа пока нет :(')
-                  else
-                    Container(
+              ),
+              OutlineButton(
+                onPressed: () async {
+                  getPrivate(token).then((response) {
+                    if (response != null) {
+                      setState(() {
+                        errcode = '';
+                        public = '';
+                        image = base64.decode(json.decode(response)['img']);
+                        time = json.decode(response)['time'];
+                        message = 'Сообщение: ' +
+                            json.decode(response)['message'] +
+                            '\n\n';
+                        message += '\n Время: $time';
+                      });
+                    }
+                  });
+                },
+                child: Text('Получить приватную информацию',
+                    style: TextStyle(fontSize: 15)),
+              ),
+              Text('Ответ сервера: ', style: TextStyle(fontSize: 20)),
+              Padding(padding: EdgeInsets.all(5)),
+              Column(children: [
+                if (errcode != '')
+                  Text(errcode)
+                else if (public != '')
+                  Text(public, style: TextStyle(fontSize: 15))
+                else if (image == null)
+                  Text('тут тоже :(')
+                else
+                  Column(
+                    children: [
+                      Text(message, style: TextStyle(fontSize: 15)),
+                      Container(
                         padding: EdgeInsets.only(top: 12),
-                        child: FittedBox(
-                          child: Image.memory(responseImage),
-                          fit: BoxFit.fill,
-                        ))
-                ]),
-              ],
-            )),
-      ],
-    ));
+                        child: Image.memory(image),
+                      ),
+                    ],
+                  )
+              ]),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<String> apiRequest(String url, Map jsonMap) async {
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+    HttpClientResponse response = await request.close();
+    // todo - you should check the response.statusCode
+    String reply = await response.transform(utf8.decoder).join();
+    httpClient.close();
+    return reply;
+  }
+
+  Future<String> getPrivate(String token) async {
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.getUrl(Uri.parse(
+        'https://jwt-flutterproj.herokuapp.com/protected?token=$token'));
+    HttpClientResponse response = await request.close();
+    if (response.statusCode == 200) {
+      String reply = await response.transform(utf8.decoder).join();
+      httpClient.close();
+      return reply;
+    } else {
+      print(response);
+      String reply = await response.transform(utf8.decoder).join();
+      httpClient.close();
+      setState(() {
+        errcode = json.decode(reply)['message'];
+        print(errcode);
+      });
+    }
+  }
+
+  Future<String> getPublic() async {
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient
+        .getUrl(Uri.parse('https://jwt-flutterproj.herokuapp.com/unprotected'));
+    HttpClientResponse response = await request.close();
+    if (response.statusCode == 200) {
+      String reply = await response.transform(utf8.decoder).join();
+      httpClient.close();
+      return reply;
+    } else {
+      return 'error';
+    }
   }
 }

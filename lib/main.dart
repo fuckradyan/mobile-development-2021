@@ -6,7 +6,7 @@ import 'lab/lab3/nav.dart';
 import 'lab/lab4/lab4.dart';
 import 'lab/lab6/lab6.dart';
 import 'lab/lab7/lab7.dart';
-import 'lab/lab8/lab88.dart';
+import 'lab/lab8/lab8.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();

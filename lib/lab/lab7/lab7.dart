@@ -110,6 +110,7 @@ Widget buildItem(String item, Animation animation, int index) {
           ),
           color: mine ? Colors.blue : Colors.grey[200],
           padding: BubbleEdges.all(8),
+          nip: mine ? BubbleNip.leftTop : BubbleNip.rightTop,
         ),
         padding: EdgeInsets.all(5),
       ),
