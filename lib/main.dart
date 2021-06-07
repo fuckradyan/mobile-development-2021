@@ -6,7 +6,7 @@ import 'lab/lab3/nav.dart';
 import 'lab/lab4/lab4.dart';
 import 'lab/lab6/lab6.dart';
 import 'lab/lab7/lab7.dart';
-import 'lab/lab7/lab777.dart';
+import 'lab/lab8/lab88.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +34,7 @@ class _MyFirstAppState extends State<MyFirstApp> {
         fontFamily: 'Montserrat',
       ),
       home: DefaultTabController(
-          length: 6,
+          length: 7,
           child: Scaffold(
             appBar: AppBar(
               title: Center(
@@ -68,6 +68,10 @@ class _MyFirstAppState extends State<MyFirstApp> {
                   Tab(
                     icon: Icon(Icons.message),
                     text: "Lab 7",
+                  ),
+                  Tab(
+                    icon: FaIcon(FontAwesomeIcons.server),
+                    text: "Lab 8",
                   )
                 ],
               ),
@@ -79,7 +83,8 @@ class _MyFirstAppState extends State<MyFirstApp> {
                 Lab3Nav(),
                 LabFourth(),
                 LabSixth(),
-                LabSeventh()
+                LabSeventh(),
+                LabEigth()
               ],
             ),
             drawer: Drawer(
