@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import '../../main.dart';
 
 class LabFirst extends StatefulWidget {
   @override
@@ -25,6 +26,7 @@ class LabFirst1 extends State {
 
   @override
   Widget build(BuildContext context) {
+    MyFirstApp.analytics.logEvent(name: 'app_opened', parameters: null);
     return !_loading
         ? Scaffold(
             body: Container(
@@ -64,6 +66,11 @@ class LabFirst1 extends State {
                             divisions: 5,
                             label: _currentSliderValue.round().toString(),
                             onChanged: (double value) {
+                              int intValue = value.toInt();
+                              MyFirstApp.analytics.logEvent(
+                                  name: 'slider_moved_on_$intValue',
+                                  parameters: null);
+
                               setState(() {
                                 _currentSliderValue = value;
                               });

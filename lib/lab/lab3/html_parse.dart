@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_html/flutter_html.dart';
+import '../../main.dart';
 
 class MyForm extends StatefulWidget {
   final String url;
   MyForm({String url}) : url = url;
   @override
-  State<StatefulWidget> createState() => MyFormState();
+  State<StatefulWidget> createState() {
+    return MyFormState();
+  }
 }
 
 class MyFormState extends State {
@@ -56,6 +59,7 @@ class MyFormState extends State {
                               onPressed: () async {
                                 catchHTML(myController.text).then((value) {
                                   setState(() {
+                                    // MyFirstApp.analytics.logEvent(name: 'lab3_3_opened', parameters: null);
                                     isRaw = true;
                                     _body = value;
                                   });

@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../../main.dart';
 
 class LabEigth extends StatefulWidget {
   const LabEigth({Key key}) : super(key: key);
 
   @override
-  _LabEigthState createState() => _LabEigthState();
+  _LabEigthState createState() {
+    MyFirstApp.analytics.logEvent(name: 'lab8_opened', parameters: null);
+    return _LabEigthState();
+  }
 }
 
 class _LabEigthState extends State<LabEigth> {
@@ -134,6 +138,7 @@ class _LabEigthState extends State<LabEigth> {
       String reply = await response.transform(utf8.decoder).join();
       httpClient.close();
       setState(() {
+        print(json.decode(reply));
         errcode = json.decode(reply)['message'];
         print(errcode);
       });

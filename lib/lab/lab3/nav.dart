@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'json_parse.dart';
 import 'webview.dart';
 import 'html_parse.dart';
+import '../../main.dart';
 
 void main() => runApp(MyApp());
 

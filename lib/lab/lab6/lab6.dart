@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_document_picker/flutter_document_picker.dart';
 import 'dart:io';
 import 'package:aes_crypt/aes_crypt.dart';
+import '../../main.dart';
 
 void main() => runApp(LabSixth());
 
@@ -23,6 +24,7 @@ class LabSixth extends StatelessWidget {
 class MyCustomForm extends StatefulWidget {
   @override
   MyCustomFormState createState() {
+    MyFirstApp.analytics.logEvent(name: 'lab6_opened', parameters: null);
     return MyCustomFormState();
   }
 }
@@ -71,7 +73,8 @@ class MyCustomFormState extends State<MyCustomForm> {
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
                     if (_formKey.currentState.validate()) {
-                      if (controllerOne.text.length > 6) {
+                      if (controllerOne.text.length > 6 &&
+                          controllerOne.text.length < 32) {
                         // If the form is valid, display a snackbar. In the real world,
                         // you'd often call a server or save the information in a database.
                         final path = await FlutterDocumentPicker.openDocument()
@@ -90,16 +93,16 @@ class MyCustomFormState extends State<MyCustomForm> {
                 ElevatedButton(
                   onPressed: () async {
                     // Validate returns true if the form is valid, or false otherwise.
-                    if (controllerOne.text.length > 6) {
+                    if (controllerOne.text.length > 6 &&
+                        controllerOne.text.length < 32) {
                       final path = await FlutterDocumentPicker.openDocument()
                           .then((value) {
                         encrypt_file(value);
-
                         print(value);
                       });
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Слишком маленький ключ')));
+                          SnackBar(content: Text('Неверный ключ')));
                     }
 
                     // If the form is valid, display a snackbar. In the real world,

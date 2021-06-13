@@ -1,12 +1,16 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../../main.dart';
 
 void main() => runApp(WebViewExample());
 
 class WebViewExample extends StatefulWidget {
   @override
-  WebViewExampleState createState() => WebViewExampleState();
+  WebViewExampleState createState() {
+    MyFirstApp.analytics.logEvent(name: 'lab3_2_opened', parameters: null);
+    return WebViewExampleState();
+  }
 }
 
 class WebViewExampleState extends State<WebViewExample> {

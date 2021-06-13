@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart';
 import 'package:vkio/main.dart';
 import 'package:vkio/vk.dart';
+import '../../main.dart';
 
 VK vk;
 Future getUsers() async {
@@ -30,7 +31,10 @@ class LabFourth extends StatefulWidget {
   LabFourth({Key key}) : super(key: key);
 
   @override
-  _LabFourthState createState() => _LabFourthState();
+  _LabFourthState createState() {
+    MyFirstApp.analytics.logEvent(name: 'lab4_opened', parameters: null);
+    return _LabFourthState();
+  }
 }
 
 class _LabFourthState extends State<LabFourth> {

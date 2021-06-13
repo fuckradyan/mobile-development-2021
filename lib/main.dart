@@ -1,3 +1,4 @@
+// adb shell setprop debug.firebase.analytics.app com.example.flutter_application_1
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'lab/lab1/lab1.dart';
@@ -7,13 +8,20 @@ import 'lab/lab4/lab4.dart';
 import 'lab/lab6/lab6.dart';
 import 'lab/lab7/lab7.dart';
 import 'lab/lab8/lab8.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_analytics/observer.dart';
 
+FirebaseAnalytics analytics = FirebaseAnalytics();
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyFirstApp());
 }
 
 class MyFirstApp extends StatefulWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
   @override
   State<StatefulWidget> createState() {
     return _MyFirstAppState();

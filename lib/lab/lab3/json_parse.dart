@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'parse_currency.dart';
+import '../../main.dart';
 
 void main() async {
   Currency _data = await getJson();
@@ -41,7 +42,10 @@ class LabThird extends StatefulWidget {
   Uri url;
   LabThird({Uri url}) : url = url;
   @override
-  LabThird1 createState() => LabThird1();
+  LabThird1 createState() {
+    MyFirstApp.analytics.logEvent(name: 'lab3_1_opened', parameters: null);
+    return LabThird1();
+  }
 }
 
 class LabThird1 extends State<LabThird> {

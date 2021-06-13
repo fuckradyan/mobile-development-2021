@@ -2,10 +2,14 @@ import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:bubble/bubble.dart';
 import 'dart:async';
+import '../../main.dart';
 
 class LabSeventh extends StatefulWidget {
   @override
-  _LabSeventhState createState() => _LabSeventhState();
+  _LabSeventhState createState() {
+    MyFirstApp.analytics.logEvent(name: 'lab7_opened', parameters: null);
+    return _LabSeventhState();
+  }
 }
 
 Future sleep1() {

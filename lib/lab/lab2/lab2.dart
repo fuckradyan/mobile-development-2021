@@ -3,6 +3,7 @@ import 'package:flutter_application_1/lab/lab2/screens/camera.dart';
 import 'package:path/path.dart';
 import 'chewie_list_item.dart';
 import 'package:video_player/video_player.dart';
+import '../../main.dart';
 
 void main() {
   runApp(LabSecond());
@@ -11,6 +12,7 @@ void main() {
 class LabSecond extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
+    MyFirstApp.analytics.logEvent(name: 'lab2_opened', parameters: null);
     return MyHomePage();
   }
 }
